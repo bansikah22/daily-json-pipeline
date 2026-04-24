@@ -12,3 +12,7 @@ services:
     volumes:
       - ./shared-data:/app/shared-data
     command: sh -c "python consumer.py"
+  
+  cleanup-job:
+    build: ./cleanup-job
+    image: bansikah/cleanup-job:1.1

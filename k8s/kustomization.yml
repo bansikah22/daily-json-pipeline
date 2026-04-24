@@ -6,3 +6,4 @@ resources:
   - pvc.yml
   - scraper-cronjob.yml
   - consumer-cronjob.yml
+  - cleanup-cronjob.yml

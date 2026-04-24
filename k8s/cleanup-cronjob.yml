@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-cronjob
+  namespace: data-pipeline
+spec:
+  schedule: "0 0 * * 0" # Runs weekly at midnight on Sunday
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: cleanup-job
+            image: bansikah/cleanup-job:1.1
+            env:
+            - name: RETENTION_DAYS
+              value: "60" # Retention period is configured here
+            volumeMounts:
+            - name: shared-data
+              mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+          - name: shared-data
+            persistentVolumeClaim:
+              claimName: shared-data-pvc
