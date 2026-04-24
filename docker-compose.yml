@@ -1,0 +1,14 @@
+services:
+  java-scraper:
+    image: java-scraper:1.0
+    volumes:
+      - ./shared-data/processed:/app/shared-data/processed
+    command: ["sh", "-c", "java -jar app.jar && echo 'Scraper completed'"]
+
+  python-consumer:
+    image: python-consumer:1.0
+    volumes:
+      - ./shared-data/processed:/app/shared-data/processed
+    depends_on:
+      - java-scraper
+    command: ["sh", "-c", "sleep 10 && python consumer.py && echo 'Consumer completed'"]
