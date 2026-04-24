@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: java-scraper-cronjob
+  namespace: data-pipeline
+spec:
+  schedule: "*/2 * * * *" # Runs every two minutes for testing
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: java-scraper
+            image: bansikah/java-scraper:1.0
+            volumeMounts:
+            - name: shared-data
+              mountPath: /app/shared-data
+          restartPolicy: OnFailure
+          volumes:
+          - name: shared-data
+            persistentVolumeClaim:
+              claimName: shared-data-pvc

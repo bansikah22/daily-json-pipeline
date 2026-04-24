@@ -18,11 +18,11 @@ public class JsonWriterService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
-        String date = LocalDate.now().toString();
+        String timestamp = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss").format(java.time.LocalDateTime.now());
         String tempFileName = "products.json.tmp";
-        String finalFileName = "products-" + date + ".json";
-        Path tempPath = Paths.get("../shared-data/processed", tempFileName);
-        Path finalPath = Paths.get("../shared-data/processed", finalFileName);
+        String finalFileName = "products-" + timestamp + ".json";
+        Path tempPath = Paths.get("/app/shared-data/incoming", tempFileName);
+        Path finalPath = Paths.get("/app/shared-data/incoming", finalFileName);
 
         File tempFile = tempPath.toFile();
         mapper.writeValue(tempFile, products);

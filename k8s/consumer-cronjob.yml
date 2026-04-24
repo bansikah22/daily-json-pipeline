@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: python-consumer-cronjob
+  namespace: data-pipeline
+spec:
+  schedule: "1-59/2 * * * *" # Runs every two minutes, one minute after the scraper
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: python-consumer
+            image: bansikah/python-consumer:1.0
+            volumeMounts:
+            - name: shared-data
+              mountPath: /app/shared-data
+          restartPolicy: OnFailure
+          volumes:
+          - name: shared-data
+            persistentVolumeClaim:
+              claimName: shared-data-pvc
