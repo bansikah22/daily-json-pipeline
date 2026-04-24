@@ -1,0 +1,35 @@
+{
+    "average_price": 38.048500000000004,
+    "cheapest_product": {
+        "name": "Starving Hearts (Triangular Trade Trilogy, #1)",
+        "price": 13.99,
+        "availability": "In stock",
+        "rating": 2.0,
+        "scrapedAt": [
+            2026,
+            4,
+            24,
+            12,
+            48,
+            15,
+            375199565
+        ]
+    },
+    "most_expensive_product": {
+        "name": "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991",
+        "price": 57.25,
+        "availability": "In stock",
+        "rating": 3.0,
+        "scrapedAt": [
+            2026,
+            4,
+            24,
+            12,
+            48,
+            15,
+            378307598
+        ]
+    },
+    "stock_count": 0,
+    "total_products": 20
+}

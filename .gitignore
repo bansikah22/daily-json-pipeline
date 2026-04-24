@@ -19,6 +19,29 @@
 *.tar.gz
 *.rar
 
+# Java Maven
+producer-java/target/
+producer-java/dependency-reduced-pom.xml
+
+# Python
+consumer-python/venv/
+consumer-python/__pycache__/
+consumer-python/*.log
+
+# Shared data (optional, if you don't want to commit sample data)
+# shared-data/processed/*.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+## Todo
+Todo.md
