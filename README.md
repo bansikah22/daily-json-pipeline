@@ -9,6 +9,8 @@ The pipeline consists of two main services:
 -   **Producer (Java):** A Java application that scrapes product data (in this example, from a dummy service), generates a JSON file with a timestamp, and writes it to a shared volume.
 -   **Consumer (Python):** A Python service that watches the shared volume for new JSON files. When a file appears, it reads the data, performs an analysis (e.g., calculates average price, finds the most/least expensive products), generates a report, and moves the processed file to a different directory.
 
+For a visual representation of the data flow, see the **[Architecture Diagram](./docs/architecture.md)**.
+
 These services communicate asynchronously through a **shared persistent volume**, which is partitioned into the following directories:
 -   `incoming/`: For new files from the producer.
 -   `processed/`: For files that have been successfully handled by the consumer.
