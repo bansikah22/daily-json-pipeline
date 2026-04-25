@@ -1,0 +1,24 @@
+# This workflow runs conftest to check Kubernetes manifests against Rego policies.
+# It triggers on every pull request to ensure that no policy violations are merged.
+
+name: "Policy Check"
+
+on:
+  pull_request:
+
+jobs:
+  conftest:
+    name: "Run conftest"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+
+      - name: "Install conftest"
+        uses: open-policy-agent/setup-conftest@v1
+        with:
+          version: 'v0.39.0' # Use a specific version for consistency
+
+      - name: "Run conftest against Kubernetes manifests"
+        run: |
+          conftest test k8s/
