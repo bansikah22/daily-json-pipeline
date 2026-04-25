@@ -42,3 +42,9 @@ For deploying the pipeline to a Kubernetes cluster (including a local `kind` clu
 -   Configuring the required `ReadWriteMany` storage.
 -   Deploying the application using Kustomize.
 -   Verifying the deployment and viewing logs.
+
+### Security and Policy Enforcement
+
+This project also includes an integration with OPA (Open Policy Agent) Gatekeeper to enforce best practices. A simple policy is included to ensure that all container images are deployed from a trusted registry.
+
+For instructions on installing Gatekeeper and applying the policies, see the **[OPA Gatekeeper Integration Guide](./docs/opa-gatekeeper.md)**.
