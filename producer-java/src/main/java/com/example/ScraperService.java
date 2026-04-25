@@ -28,12 +28,13 @@ public class ScraperService {
             String ratingClass = productElement.select(".star-rating").attr("class");
             double rating = parseRating(ratingClass);
 
-            Product product = new Product();
-            product.setName(name);
-            product.setPrice(price);
-            product.setAvailability(availability);
-            product.setRating(rating);
-            product.setScrapedAt(LocalDateTime.now());
+            Product product = new Product(
+                name,
+                price,
+                availability,
+                rating,
+                LocalDateTime.now()
+            );
 
             products.add(product);
         }
