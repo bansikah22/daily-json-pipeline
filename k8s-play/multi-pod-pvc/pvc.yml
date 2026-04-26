@@ -1,0 +1,13 @@
+# k8s-play/multi-pod-pvc/pvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: multi-pod-shared-pvc
+spec:
+  storageClassName: nfs
+  accessModes:
+    # ReadWriteMany is ESSENTIAL for multiple pods to mount the same volume.
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

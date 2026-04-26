@@ -1,0 +1,26 @@
+# k8s-play/pvc-demo/pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-writer-pod
+spec:
+  containers:
+  - name: writer
+    image: busybox
+    command: ["sh","-c","echo 'Hello from a PVC!' > /data/pvc-message.txt && sleep 3600"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+    volumeMounts:
+    - name: my-pvc-storage
+      mountPath: /data
+  volumes:
+  - name: my-pvc-storage
+    # Instead of an emptyDir, this volume uses a PersistentVolumeClaim.
+    # This means the data will persist even if the pod is deleted.
+    persistentVolumeClaim:
+      claimName: single-pod-pvc

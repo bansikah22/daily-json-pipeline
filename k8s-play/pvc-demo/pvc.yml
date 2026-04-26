@@ -1,0 +1,14 @@
+# k8s-play/pvc-demo/pvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: single-pod-pvc
+spec:
+  # This requests storage from the 'nfs' StorageClass we installed earlier.
+  # This is crucial for getting a volume that supports ReadWriteMany.
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi # A small claim for this demo

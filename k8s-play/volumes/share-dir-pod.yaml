@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-demo
+spec:
+  containers:
+  - name: writer
+    image: busybox
+    command: ["sh","-c","echo hello > /shared/msg.txt && sleep 3600"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /shared
+
+  - name: reader
+    image: busybox
+    command: ["sh","-c","cat /shared/msg.txt && sleep 3600"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /shared
+
+  volumes:
+  - name: shared-vol
+    emptyDir: {}

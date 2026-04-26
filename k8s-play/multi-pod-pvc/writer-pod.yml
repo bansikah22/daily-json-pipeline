@@ -1,0 +1,24 @@
+# k8s-play/multi-pod-pvc/writer-pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-pvc-writer
+spec:
+  containers:
+  - name: writer
+    image: busybox
+    command: ["sh","-c","echo 'Hello from the writer pod!' > /data/multi-pod-message.txt && sleep 3600"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+    volumeMounts:
+    - name: shared-storage
+      mountPath: /data
+  volumes:
+  - name: shared-storage
+    persistentVolumeClaim:
+      claimName: multi-pod-shared-pvc
