@@ -2,6 +2,8 @@ import os
 import json
 import shutil
 import logging
+import smtplib
+from email.mime.text import MIMEText
 from analyzer import analyze_data
 
 # Define absolute paths
@@ -17,8 +19,39 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S',
                     handlers=[logging.StreamHandler()])
 
+def send_email(subject, body):
+    """Sends an email notification."""
+    try:
+        smtp_host = os.environ.get("SMTP_HOST")
+        smtp_port = int(os.environ.get("SMTP_PORT", 587))
+        smtp_user = os.environ.get("SMTP_USER")
+        smtp_pass = os.environ.get("SMTP_PASS")
+        mail_to = os.environ.get("MAIL_TO")
+        mail_from = os.environ.get("MAIL_FROM")
+
+        if not all([smtp_host, smtp_port, smtp_user, smtp_pass, mail_to, mail_from]):
+            logging.warning("Email configuration is incomplete. Skipping email notification.")
+            return
+
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = mail_from
+        msg["To"] = mail_to
+
+        with smtplib.SMTP(smtp_host, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(mail_from, [mail_to], msg.as_string())
+            logging.info(f"Successfully sent email notification to {mail_to}")
+
+    except Exception as e:
+        logging.error(f"Failed to send email: {e}")
+
 def main():
     logging.info("Starting consumer...")
+    status = "SUCCESS"
+    message = "Data pipeline ran successfully."
+
     for dir_path in [INCOMING_DIR, PROCESSED_DIR, FAILED_DIR, REPORTS_DIR]:
         os.makedirs(dir_path, exist_ok=True)
 
@@ -26,6 +59,7 @@ def main():
     
     if not files_to_process:
         logging.info("No new files to process.")
+        send_email("Data Pipeline: No Data", "The data pipeline ran but found no new files to process.")
         return
 
     latest_file_path = os.path.join(INCOMING_DIR, files_to_process[0])
@@ -41,19 +75,26 @@ def main():
             json.dump(analysis, f, indent=4)
         logging.info(f"Analysis report saved to {report_path}")
 
+        message += f"\n\n- Processed {len(files_to_process)} file(s).\n- Report generated at {report_path}."
+
         # Move all processed files
         for filename in files_to_process:
             shutil.move(os.path.join(INCOMING_DIR, filename), os.path.join(PROCESSED_DIR, filename))
         logging.info(f"Moved {len(files_to_process)} files to {PROCESSED_DIR}")
 
     except Exception as e:
-        logging.error(f"Error processing files: {e}")
+        status = "FAILURE"
+        message = f"Data pipeline failed with an error: {e}"
+        logging.error(message)
         # Move all incoming files to failed
         for filename in files_to_process:
             shutil.move(os.path.join(INCOMING_DIR, filename), os.path.join(FAILED_DIR, filename))
         logging.info(f"Moved {len(files_to_process)} files to {FAILED_DIR}")
             
-    logging.info("Consumer finished.")
+    finally:
+        subject = f"Data Pipeline: {status}"
+        send_email(subject, message)
+        logging.info("Consumer finished.")
 
 if __name__ == "__main__":
     main()

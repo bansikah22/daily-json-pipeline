@@ -43,5 +43,8 @@ Thumbs.db
 hs_err_pid*
 replay_pid*
 
+# Local secrets
+.env
+
 ## Todo
 Todo.md
